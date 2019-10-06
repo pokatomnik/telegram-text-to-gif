@@ -1,16 +1,26 @@
 {
-  "name": "gify",
-  "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "dependencies": {
-    "canvas": "^2.6.0",
-    "gifencoder": "^2.0.1"
-  }
+    "name": "gifmaker",
+    "version": "1.0.0",
+    "description": "",
+    "main": "index.js",
+    "scripts": {
+        "test": "npm run tscheck && npm run prettier-check",
+        "start": "ts-node --files ./index.ts",
+        "tscheck": "tsc --noEmit -p .",
+        "prettier-check": "npm run prettier -- -l",
+        "prettier": "git ls-files ./ | grep -E '\\.ts$' | xargs prettier"
+    },
+    "keywords": [],
+    "author": "",
+    "license": "ISC",
+    "dependencies": {
+        "canvas": "^2.6.0",
+        "gifencoder": "^2.0.1",
+        "ts-node": "^8.4.1",
+        "typescript": "^3.6.3"
+    },
+    "devDependencies": {
+        "@types/node": "^12.7.11",
+        "prettier": "^1.18.2"
+    }
 }
