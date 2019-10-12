@@ -4,6 +4,7 @@ import GIFEncoder from 'gifencoder';
 import {Configurable} from '../common/configurable';
 import {GifMakerConfiguration} from './configuration';
 import {getSizesAndLines, getContext} from './measure';
+import {CanvasType} from './canvas-type';
 
 const DEFAULT_PARAMS: GifMakerConfiguration = {
     delay: 500,
@@ -56,30 +57,30 @@ export class GIFMaker {
     public writeTo(text: string, writeStream: WriteStream) {
         const {font, fillStyle} = this.config.getConfig();
 
-        const {height, lines, width, lineHeight, padding} = getSizesAndLines({
+        const measurements = getSizesAndLines({
             font,
             fillStyle,
             text,
             maxWidth: this.config.getConfig().maxWidth
         });
 
-        const ctx = getContext(fillStyle, font).withSizes(width, height);
+        const {width, height} = measurements;
 
-        const encoder = this.getEncoder(width, height, writeStream);
+        const paddings = CanvasType.makePaddings(0, 0);
 
-        let x = padding;
-        let y = padding;
-        lines.forEach((line) => {
-            [...line.join(' ')].forEach((letter) => {
-                const width = ctx.measureText(letter).width;
-                ctx.fillText(letter, x, y);
-                x += width;
-                encoder.addFrame(ctx);
-            });
+        const ctx = getContext(fillStyle, font).withSizes(
+            width + paddings.horizontal * 2,
+            height + paddings.vertical * 2
+        );
 
-            // insert a new line
-            y += lineHeight;
-            x = padding;
+        const encoder = this.getEncoder(
+            width + paddings.horizontal * 2,
+            height + paddings.vertical * 2,
+            writeStream
+        );
+
+        new CanvasType(measurements, paddings).writeTo(ctx, (frame) => {
+            encoder.addFrame(frame);
         });
 
         encoder.finish();

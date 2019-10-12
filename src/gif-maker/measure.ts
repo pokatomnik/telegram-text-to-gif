@@ -1,5 +1,7 @@
 import {createCanvas} from 'canvas';
 
+import {VirtualCanvas} from './virtual-canvas';
+
 export const getContext = (fillStyle: string, font: string) => ({
     simple() {
         return this.withSizes(0, 0);
@@ -41,9 +43,6 @@ export const getSizesAndLines = ({
     const text = rawText.trim().replace(/\s\s+/g, SPACE_CHARACTER);
 
     let maxWidth = rawMaxWidth;
-    const lines: string[][] = [];
-    let height = 0;
-    let width = 0;
 
     if (text.length > MAX_STRING_LENGTH) {
         throw new Error('Text is too long');
@@ -60,39 +59,11 @@ export const getSizesAndLines = ({
         maxWidth = longestWordWidth;
     }
 
-    let currentLine: string[] = [];
-    const lineWidths: number[] = [];
+    const virtualCanvas = new VirtualCanvas(ctx, maxWidth);
 
-    // height of the last line is the same as for the other lines
-    let singleLineHeight: number = 0;
+    words.forEach((word) => {
+        virtualCanvas.addWord(word);
+    });
 
-    for (let i = 0; i < words.length; i++) {
-        const word = words[i];
-        currentLine.push(word);
-        const {width, emHeightAscent} = ctx.measureText(currentLine.join(' '));
-        singleLineHeight = emHeightAscent;
-
-        if (width >= maxWidth || i === words.length - 1) {
-            lineWidths.push(width);
-            lines.push(currentLine);
-            currentLine = [];
-        }
-
-        if (width >= maxWidth) {
-            height += emHeightAscent;
-        }
-    }
-
-    width = lineWidths.reduce(
-        (currentMax, currentWidth) => (currentWidth > currentMax ? currentWidth : currentMax),
-        0
-    );
-
-    return {
-        lines,
-        width: Math.round(width + PADDING * 2),
-        height: Math.round(height + PADDING * 2),
-        lineHeight: singleLineHeight,
-        padding: PADDING
-    };
+    return virtualCanvas.finalizeAndGet();
 };
