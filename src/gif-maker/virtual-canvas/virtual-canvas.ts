@@ -34,7 +34,8 @@ export class VirtualCanvas extends Finalizable {
     public addWord(word: string) {
         const currentLineWidth = this.currentLine.getWidth();
         const newWord = new Word(this.context, word);
-        const newWordAndSpaceWidth = this.currentLine.getWidth() + newWord.getWidth();
+        const newWordAndSpaceWidth =
+            this.currentLine.getWidth() + this.currentLine.getSpaceWordWidth() + newWord.getWidth();
 
         const totalWidth = currentLineWidth + newWordAndSpaceWidth;
 
@@ -53,11 +54,10 @@ export class VirtualCanvas extends Finalizable {
             this.finalizeCurrentLine();
         }
 
-        this.finalize();
-
         const lines = this.lines.map((line) =>
             line
                 .getWords()
+                .filter((word) => word.getWord() !== ' ')
                 .map((word) => word.getWord())
                 .join(' ')
                 .split('')
@@ -70,10 +70,16 @@ export class VirtualCanvas extends Finalizable {
         );
         const lineHeight = Math.floor(height / lines.length);
 
+        const descentHeight = this.lines.length
+            ? this.lines[this.lines.length - 1].getDescentHeight()
+            : 0;
+
+        this.finalize();
+
         return {
             lines,
             width,
-            height,
+            height: height + descentHeight,
             lineHeight
         };
     }

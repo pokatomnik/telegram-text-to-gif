@@ -4,6 +4,7 @@ export class Word {
     private readonly word: string;
     private readonly width: number;
     private readonly height: number;
+    private readonly descentHeight: number;
     private readonly context: CanvasRenderingContext2D;
 
     constructor(ctx: CanvasRenderingContext2D, word: string) {
@@ -12,6 +13,7 @@ export class Word {
         const textMetrics = this.context.measureText(this.word);
         this.width = textMetrics.width;
         this.height = textMetrics.emHeightAscent;
+        this.descentHeight = textMetrics.emHeightDescent;
     }
 
     public getWord() {
@@ -24,6 +26,10 @@ export class Word {
 
     public getHeight() {
         return this.height;
+    }
+
+    public getDescentHeight() {
+        return this.descentHeight;
     }
 
     public getContext() {

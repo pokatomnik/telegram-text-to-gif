@@ -5,7 +5,7 @@ import fs from 'fs';
 import {GIFMaker} from './src/gif-maker';
 
 const gifMaker = new GIFMaker({
-    maxWidth: 20,
+    maxWidth: 150,
     font: '24px Arial'
 });
 

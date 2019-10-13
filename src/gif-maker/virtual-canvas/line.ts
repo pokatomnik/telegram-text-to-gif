@@ -15,6 +15,8 @@ export class Line {
 
     private height = 0;
 
+    private descentHeight = 0;
+
     constructor(ctx: CanvasRenderingContext2D) {
         this.context = ctx;
         this.spaceWord = new Word(this.context, Line.SPACE_CHARACTER);
@@ -31,6 +33,10 @@ export class Line {
             0
         );
         this.height = Math.max(this.height, this.spaceWord.getHeight(), word.getHeight());
+        this.descentHeight = Math.max.apply(
+            null,
+            this.words.map((word) => word.getDescentHeight())
+        );
     }
 
     public isEmpty() {
@@ -51,5 +57,9 @@ export class Line {
 
     public getHeight() {
         return this.height;
+    }
+
+    public getDescentHeight() {
+        return this.descentHeight;
     }
 }

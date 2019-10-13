@@ -15,12 +15,12 @@ export class CanvasType extends Finalizable {
     /**
      * Minumum vertical padding
      */
-    public static MIN_VERTICAL_PADDING = 30;
+    public static MIN_VERTICAL_PADDING = 0;
 
     /**
      * Minimum horizontal padding
      */
-    public static MIN_HORIZONTAL_PADDING = 30;
+    public static MIN_HORIZONTAL_PADDING = 0;
 
     public static makePaddings(horizontal: number = 0, vertical: number = 0): Required<Paddings> {
         return {
