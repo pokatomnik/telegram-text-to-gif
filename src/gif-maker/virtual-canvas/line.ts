@@ -3,6 +3,8 @@ import {CanvasRenderingContext2D} from 'canvas';
 import {Word} from './word';
 
 export class Line {
+    public static requireNoSpaces = (word: Word) => word.getWord() !== Line.SPACE_CHARACTER;
+
     private static SPACE_CHARACTER = ' ';
 
     private readonly words: Array<Word> = [];
@@ -43,8 +45,8 @@ export class Line {
         return !this.words.length;
     }
 
-    public getWords() {
-        return this.words;
+    public getWords(wordsFilterFn?: (word: Word) => boolean) {
+        return wordsFilterFn ? this.words.filter(wordsFilterFn) : this.words;
     }
 
     public getWidth() {

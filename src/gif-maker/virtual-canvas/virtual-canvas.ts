@@ -56,8 +56,7 @@ export class VirtualCanvas extends Finalizable {
 
         const lines = this.lines.map((line) =>
             line
-                .getWords()
-                .filter((word) => word.getWord() !== ' ')
+                .getWords(Line.requireNoSpaces)
                 .map((word) => word.getWord())
                 .join(' ')
                 .split('')
